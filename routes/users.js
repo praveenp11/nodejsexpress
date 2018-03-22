@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/orders/:Id', function(req, res, next){
-  Order.find({maker: req.params.Id})
+  Order.find({'signedOrder.maker': req.params.Id})
     .then(results => {
         res.send(results);
     })

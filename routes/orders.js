@@ -8,7 +8,7 @@ var Order = require('../models/order');
 /* GET users listing. */
 router.get('/:page*?', function(req, res, next) {
 
-    var perPage = 1
+    var perPage = 10;
     var page = req.params.page || 1
 
     Order.find({})
