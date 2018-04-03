@@ -6,13 +6,16 @@ var db = require('../db/mongoose');
 var Order = require('../models/order');
 
 /* GET users listing. */
-router.get('/:page*?', function(req, res, next) {
+router.get('/:status/:page*?', function(req, res, next) {
 
     var perPage = 10;
     var page = req.params.page || 1
-
-    Order.find({})
-    .skip((perPage * page) - perPage)
+    var status = req.params.status || 'active'
+    Order.find(
+        {
+            status:status
+        }
+    ).skip((perPage * page) - perPage)
     .limit(perPage)
     .exec(function(err, results) {
         Order.count().exec(function(err, count) {

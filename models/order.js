@@ -101,6 +101,10 @@ var orderSchema = new Schema({
         type:String,
         required: true
     },
+    status:{
+        type:String,
+        default:'active'
+    },
     created_at:{
         type:Date,
         required: true,
