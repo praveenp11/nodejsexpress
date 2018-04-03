@@ -22,7 +22,7 @@ router.get('/:status/:page*?', function(req, res, next) {
             if (err) return next(err);
 
             response = {
-                'results': results,
+                'results': results, 
                 'current' : page,
                 'pages' :Math.ceil(count / perPage) 
             };
@@ -37,15 +37,13 @@ router.get('/:status/:page*?', function(req, res, next) {
     });
 });
 
-router.post('/create', (req, res) => {
-    var neworder = new Order(req.body);
-    neworder.save()
-    .then(result => {
-        res.send(result._id);
-    })
-    .catch(err => {
-        res.send(err);
-    })
-});
+const orderBook = {
+    saveOrder : async(order) => {
+        var neworder = new Order(order);
+        let result = await neworder.save()
+        return result;
+    }
+}
 
-module.exports = router;
+
+module.exports = {orders:router,orderBook};
