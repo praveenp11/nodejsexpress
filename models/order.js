@@ -8,11 +8,11 @@ var ecSignature = new Schema({
         required : true
     },
     r:{
-        type: Number,
+        type: String,
         required : true
     },
     s:{
-        type: Number,
+        type: String,
         required : true
     }
 });
@@ -47,11 +47,11 @@ var signedOrder = new Schema({
         required: true
     },
     makerFee:{
-        type:Boolean,
+        type:String,
         required:true
     },
     takerFee:{
-        type:Boolean,
+        type:String,
         required:true
     },
     makerTokenAmount:{
