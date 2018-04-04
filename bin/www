@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('samplenode:server');
 var http = require('http');
-//const socketIO = require("socket.io");
+const socketIO = require("socket.io");
 var { orderBook} = require('../routes/orders');
 /**
  * Get port from environment and store in Express.
@@ -28,27 +28,24 @@ var server = http.createServer(app);
 //var io = socketIO(server);
 //const io = require('socket.io')(server, { transports: ['websocket'] });
 
+server.listen(port);
 
-const io = require('socket.io')(server, {
-  serveClient: false,
-  // below are engine.IO options
-  pingInterval: 2000,
-  pingTimeout: 5000,
-  cookie: false
-});
+const io = socketIO(server)
 
 console.log(io);
 io.on("connection", (socket) => {
-console.log('connected');
-  socket.on('add order', async(order) => {
+  console.log('user connected');
+  socket.on('addorder', async(order) => {
+    console.log('addorder');
     let newOrder = await orderBook.saveOrder(order);
     if(newOrder._id) {
-      socket.emit('new order', order);
+      console.log('emiting');
+      socket.emit('neworder', order);
     }
   })
 
 });
-server.listen(port);
+
 server.on('error', onError);
 server.on('listening', onListening);
 
