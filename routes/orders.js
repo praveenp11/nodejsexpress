@@ -4,38 +4,62 @@ var bodyParser = require('body-parser');
 
 var db = require('../db/mongoose');
 var Order = require('../models/order');
+var ObjectId = require('mongoose').Types.ObjectId; 
 
-/* GET users listing. */
-router.get('/:status/:page*?', function(req, res, next) {
-
+var getOrders = async(req, res) => {
     var perPage = 10;
     var page = req.params.page || 1
     var status = req.params.status || 'active'
-    Order.find(
+
+    let results = await Order.find(
         {
             status:status
         }
     ).skip((perPage * page) - perPage)
-    .limit(perPage)
-    .exec(function(err, results) {
-        Order.count().exec(function(err, count) {
-            if (err) return next(err);
+    .limit(perPage);
+    let response  = {};
+    let count = await Order.count(
+        {
+            status:status
+        }
+    );  
+      
+    response = {
+        'results': results, 
+        'current' : page,
+        'total' : count,
+        'pages' :Math.ceil(count / perPage) 
+    };
 
-            response = {
-                'results': results, 
-                'current' : page,
-                'pages' :Math.ceil(count / perPage) 
-            };
+   
+    return response;
+}
 
-            /*res.render('main/products', {
-                products: products,
-                current: page,
-                pages: Math.ceil(count / perPage)
-            })*/
-            res.send(response);
-        })
+router.get('/list/:status?/:page*?', async (req, res, next) => {
+    console.log('Inside list method');
+    let response = await getOrders(req, res);     
+    res.render('orders', response);    
+});
+
+/* GET orders listing. */
+router.get('/:status?/:page*?', async (req, res, next) => {
+    console.log('Inside main method');
+    let response = await getOrders(req, res);     
+    res.send(response);    
+});
+
+
+router.delete('/:Id', function(req, res) { 
+    console.log('Inside delete method', req.params.Id);
+    Order.remove({'_id': new ObjectId(req.params.Id)})
+    .then(results => {
+        res.send({'status' : 1});
+    })
+    .catch(err => {
+        res.send({'status' : 0});
     });
 });
+
 
 const orderBook = {
     saveOrder : async(order) => {

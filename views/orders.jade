@@ -1,0 +1,83 @@
+extends layout
+
+block content
+    mixin order-card(order)
+        tr
+            td
+                - var shorthash = order.hash.substr(1, 10)
+                a(href='javascript:;', title= order.hash) #{shorthash}...
+            td= order.signedOrder.maker
+            td= order.fromToken
+            td= order.fromTokenValue
+            td= order.toToken
+            td= order.toTokenValue
+            td= order.orderType
+            td
+                a.orderaction(href="javascript:void(0)", data-id=order.id) Delete
+
+    div.container-fluid
+        div.content
+            div.row
+                div.col
+                    h4 Orders Listing Page.
+                div.col.text-right
+                    p Total Orders : #{total}
+
+            table.table.table-striped
+                thead
+                tr
+                    th Order Hash
+                    th Maker
+                    th From Token
+                    th From Token Value
+                    th To Token
+                    th To Token Value
+                    th Order Type
+                    th Action
+                tbody
+                    for order in results
+                        +order-card(order)
+
+            div.row.float-right
+                div.col
+                    nav
+                        ul.pagination
+                            li.page-item
+                                a.page-link(href="/orders/list/active/1" aria-label="Previous")
+                                    span(aria-hidden="true")&laquo;
+                                    span.sr-only Previous
+
+                            - for (var i=1; i <= pages; i++) {
+                                - if(current==i)
+                                    li.page-item.active
+                                        a.page-link(href="#") #{i}
+                                - else 
+                                    li.page-item
+                                        a.page-link(href="/orders/list/active/" + i ) #{i}
+                            - }
+
+                            li.page-item
+                                a.page-link(href="/orders/list/active/" + pages aria-label="Next")
+                                    span(aria-hidden="true")&raquo;
+                                    span.sr-only Next
+
+    script.
+        $(document).ready(function(e){
+            console.log('page loaded.');
+            $('.orderaction').on('click', function(e){
+                $.ajax({
+                    url: '/orders/'+$(this).attr('data-id'),
+                    type: 'DELETE',
+                    dataType: 'json'                    
+                })
+                .done(function(res){
+                    if(res.status == 1){
+                        alert('Order deleted successfully. Reloading the page...');
+                        window.location.reload();
+                    }else{
+                        alert('Oops something went wrong please try after sometime.');
+                    }
+                });
+            });
+        });                    
+
