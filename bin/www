@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('samplenode:server');
 var http = require('http');
 const socketIO = require("socket.io");
-var { orderBook} = require('../routes/orders');
+var { orderBook } = require('../routes/orders');
 /**
  * Get port from environment and store in Express.
  */
@@ -39,8 +39,17 @@ io.on("connection", (socket) => {
     console.log('addorder');
     let newOrder = await orderBook.saveOrder(order);
     if(newOrder._id) {
-      console.log('emiting');
+      console.log('emiting neworder');
       socket.emit('neworder', order);
+    }
+  })
+
+  socket.on('fillorder', async(order) => {
+    console.log('fillorder');
+    let response = await orderBook.fillOrder(order.hash);
+    if(response) {
+      console.log('emiting fillorder');
+      socket.emit('fillorder', order.hash);
     }
   })
 

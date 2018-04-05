@@ -66,6 +66,11 @@ const orderBook = {
         var neworder = new Order(order);
         let result = await neworder.save()
         return result;
+    },
+    fillOrder : async(orderhash) => {
+        var neworder = new Order({hash:orderhash});
+        let result =  await neworder.update({ hash: orderhash }, { $set: { status: 'filled' }});
+        return result;
     }
 }
 
