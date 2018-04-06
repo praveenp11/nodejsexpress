@@ -67,10 +67,15 @@ const orderBook = {
         let result = await neworder.save()
         return result;
     },
+
     fillOrder : async(orderhash) => {
-        var neworder = new Order({hash:orderhash});
-        let result =  await neworder.update({ hash: orderhash }, { $set: { status: 'filled' }});
-        return result;
+        var updatedOrder = await Order.findOneAndUpdate({hash:orderhash}, { $set: { status: 'filled' }});
+        return updatedOrder;
+    },
+
+    cancelOrder : async(orderhash) => {
+        var updatedOrder = await Order.findOneAndUpdate({hash:orderhash}, { $set: { status: 'cancel' }});
+        return updatedOrder;
     }
 }
 

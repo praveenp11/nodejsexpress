@@ -8,8 +8,8 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/orders/:Id', function(req, res, next){
-  Order.find({'signedOrder.maker': req.params.Id})
+router.get('/orders/:Id/:status', function(req, res, next){
+  Order.find({'signedOrder.maker': req.params.Id, 'status': req.params.status})
     .then(results => {
         res.send(results);
     })

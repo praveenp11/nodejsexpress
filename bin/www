@@ -29,11 +29,10 @@ var server = http.createServer(app);
 //const io = require('socket.io')(server, { transports: ['websocket'] });
 
 server.listen(port);
-
+ 
 const io = socketIO(server)
-
-console.log(io);
 io.on("connection", (socket) => {
+
   console.log('user connected');
   socket.on('addorder', async(order) => {
     console.log('addorder');
@@ -50,6 +49,15 @@ io.on("connection", (socket) => {
     if(response) {
       console.log('emiting fillorder');
       socket.emit('fillorder', order.hash);
+    }
+  })
+
+  socket.on('cancelorder', async(order) => {
+    console.log('cancelorder');
+    let response = await orderBook.cancelOrder(order.hash);
+    if(response) {
+      console.log('emiting cancelorder');
+      socket.emit('cancelorder', order.hash);
     }
   })
 
