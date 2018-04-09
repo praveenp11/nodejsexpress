@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
     let newOrder = await orderBook.saveOrder(order);
     if(newOrder._id) {
       console.log('emiting neworder');
-      socket.emit('neworder', order);
+      io.emit('neworder', order);
     }
   })
 
@@ -48,16 +48,16 @@ io.on("connection", (socket) => {
     let response = await orderBook.fillOrder(order.hash);
     if(response) {
       console.log('emiting fillorder');
-      socket.emit('fillorder', order.hash);
+      io.emit('fillorder', order.hash);
     }
-  })
-
+  }) 
+ 
   socket.on('cancelorder', async(order) => {
     console.log('cancelorder');
     let response = await orderBook.cancelOrder(order.hash);
     if(response) {
       console.log('emiting cancelorder');
-      socket.emit('cancelorder', order.hash);
+      io.emit('cancelorder', order.hash);
     }
   })
 
