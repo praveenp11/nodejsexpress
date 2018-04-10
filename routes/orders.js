@@ -15,7 +15,9 @@ var getOrders = async(req, res) => {
         {
             status:status
         }
-    ).skip((perPage * page) - perPage)
+    )
+    .sort([['created_at', -1]])
+    .skip((perPage * page) - perPage)
     .limit(perPage);
     let response  = {};
     let count = await Order.count(

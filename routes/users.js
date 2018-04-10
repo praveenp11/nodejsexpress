@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/orders/:Id/:status', function(req, res, next){
-  Order.find({'signedOrder.maker': req.params.Id, 'status': req.params.status})
+  Order.find({'signedOrder.maker': req.params.Id, 'status': req.params.status}).sort([['created_at', -1]])
     .then(results => {
         res.send(results);
     })
