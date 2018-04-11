@@ -105,6 +105,10 @@ var orderSchema = new Schema({
         type:String,
         default:'active'
     },
+    txHash:{
+        type:String,
+        default:null
+    },
     created_at:{
         type:Date,
         required: true,

@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
 
   socket.on('fillorder', async(order) => {
     console.log('fillorder');
-    let response = await orderBook.fillOrder(order.hash);
+    let response = await orderBook.fillOrder(order.hash, order.txHash);
     if(response) {
       console.log('emiting fillorder');
       io.emit('fillorder', order.hash);

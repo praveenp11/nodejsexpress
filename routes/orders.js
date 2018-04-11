@@ -70,8 +70,8 @@ const orderBook = {
         return result;
     },
 
-    fillOrder : async(orderhash) => {
-        var updatedOrder = await Order.findOneAndUpdate({hash:orderhash}, { $set: { status: 'filled' }});
+    fillOrder : async(orderhash, txHash) => {
+        var updatedOrder = await Order.findOneAndUpdate({hash:orderhash}, { $set: { status: 'filled', txHash: txHash }});
         return updatedOrder;
     },
 
