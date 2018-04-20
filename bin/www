@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
     let response = await orderBook.fillOrder(order.hash, order.txHash);
     if(response) {
       console.log('emiting fillorder');
-      io.emit('fillorder', order.hash);
+      io.emit('fillorder', order);
     }
   }) 
  
